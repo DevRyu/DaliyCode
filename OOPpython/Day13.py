@@ -33,18 +33,17 @@
 # 1
 
 
-# Case 2) 지역 변수 호출시 지역변수 b 선언, 할당 이전시의 결과(에러)
+# Case 2) 지역영역내 지역변수 b 할당, 할당 이전시 print(b)로 출력하면 어떻게 될가?
+# b = 1
+# def func1(a):
+#     print(a)
+#     print(b)
+#     b = 2 # UnboundLocalError: local variable 'b' referenced before assignment  로컬 변수는 할당 전에 참조된다는 에러가 나온다
+#     # 이름이 같은 지역변수와 전역변수가 공존시 함수 내 작동에서 지역 변수가 변수로써 사용이된다. 
 
-b = 1
-def func1(a):
-    print(a)
-    print(b)
-    b = 2 # UnboundLocalError: local variable 'b' referenced before assignment  로컬 변수는 할당 전에 참조된다. 
-    # 이름이 같은 지역변수와 전역변수가 공존시 함수 내 작동에서 지역 변수가 변수로써 사용이된다. 
+# from dis import dis
 
-from dis import dis
-
-print(dis(func1))
+# print(dis(func1))
 
 #  40           0 LOAD_GLOBAL              0 (print)
 #               2 LOAD_FAST                0 (a)
@@ -96,7 +95,7 @@ print(cls_test(9))
 
 
 # 클로저(Closure) 사용시
-# 장점 : 전역변수 사용감소, 디자인 패턴 적용, 변수 은닉화 가능 
+# 장점 : 전역변수 사용감소, 디자인 패턴 적용, 변수 은닉화 가능합니다.
 # 단점 : 자유 변수영역이 함수 실행, 또는 사용시 메모리에 적재되므로 메모리에 과다하게 사용되어 질 수 있다. 
 def easy_closure():
     # ------------외부함수와 내부함수의 영역 = 자유 변수영역 시작 ------------
@@ -104,7 +103,7 @@ def easy_closure():
     # ------------- 자유영역 종료-----------------------------
     def easy_average(v):
         series.append(v)
-        print('{} {}'.format(series, len(series)))
+        print('series, len(series): {} {}'.format(series, len(series)))
 
         return sum(series) / len(series)    
     # easy_closure 함수가 밑에서 실행 되었다고 가정하고 easy_average를 반환 해서 클로저가 선언 되었지만
@@ -113,27 +112,44 @@ def easy_closure():
 
 # 클로저 선언
 closure1 = easy_closure()
-
 print(closure1(5))
+# series, len(series): [5] 1
+# 5.0
 print(closure1(10))
+# series, len(series): [5, 10] 2
+# 7.5
 print(closure1(15))
-
+# series, len(series): [5, 10, 15] 3
+# 10.0
 #__code__ : 특수 속성으로 함수의 body를 나타내는 코드 객체
 # dir()로 열면 co_freevars(자유 변수 영역) 이 나온다.
 print(dir(closure1.__code__))
-
+# ['__class__', '__delattr__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__gt__', '__hash__', '__init__', 
+# '__init_subclass__', '__le__', '__lt__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', 
+# 'co_argcount', 'co_cellvars', 'co_code', 'co_consts', 'co_filename', 'co_firstlineno', 'co_flags', 'co_freevars', 'co_kwonlyargcount', 
+# 'co_lnotab', 'co_name', 'co_names', 'co_nlocals', 'co_stacksize', 'co_varnames']
 # co_freevars를 출력하면 튜플 형태로 자유 변수 영역에 저장되어있다.
 print(closure1.__code__.co_freevars) # ('series',)
 
 # 클로저에도 함수처럼 내장 메서드, 속성이 정의 되어있고 
 print(dir(closure1.__closure__))
+# ['__add__', '__class__', '__contains__', '__delattr__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__',
+#  '__getattribute__', '__getitem__', '__getnewargs__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__iter__', 
+#  '__le__', '__len__', '__lt__', '__mul__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__rmul__',
+#   '__setattr__', '__sizeof__', '__str__', '__subclasshook__', 'count', 'index']
+print(dir(closure1.__closure__[0])) # 인덱스[0]으로 주면 셀로 리턴이되는데 셀이란 스프레드 시트의 셀타입이다
+# ['__class__', '__delattr__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__gt__', 
+# '__hash__', '__init__', '__init_subclass__', '__le__', '__lt__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', 
+# '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', 'cell_contents']
 
-print(closure1)
-# 클로저에도 함수처럼 내장 메서드, 속성이 정의 되어있고
 print(dir(closure1.__closure__[0].cell_contents)) # 인덱스[0]으로 주면 셀로 리턴이되는데 셀이란 스프레드 시트의 셀타입이다. "셀" 객체는 여러 스코프에서 참조하는 변수를 구현하는 데 사용됩니다.
-# 조금 더 쉽게 찾아본 결과 Cpython에서 렉서(어휘 분석) 환경에서 클로저의 어휘(cell)이라고 생각하시면 될거 같습니다.
+# ['__add__', '__class__', '__contains__', '__delattr__', '__delitem__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', 
+# '__getattribute__', '__getitem__', '__gt__', '__hash__', '__iadd__', '__imul__', '__init__', '__init_subclass__', '__iter__',
+#  '__le__', '__len__', '__lt__', '__mul__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__reversed__', '__rmul__', '__setattr__',
+#  '__setitem__', '__sizeof__', '__str__', '__subclasshook__', 'append', 'clear', 'copy', 'count', 'extend', 'index', 'insert', 'pop', 'remove', 'reverse', 'sort'] 
+
+# 셀을 정확하게 이해는 하지 못햇지만 조금 더 쉽게 찾아본 결과 Cpython에서 렉서(어휘 분석) 환경에서 클로저의 어휘(cell)이라고 생각하시면 될거 같습니다.
 # cell_contents속성을 사용하면 클로저의 사용가능한 함수들을 보여준다. 
-# ['__add__', '__class__', '__contains__', '__delattr__', '__delitem__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__getitem__', '__gt__', '__hash__', '__iadd__', '__imul__', '__init__', '__init_subclass__', '__iter__', '__le__', '__len__', '__lt__', '__mul__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__reversed__', '__rmul__', '__setattr__', '__setitem__', '__sizeof__', '__str__', '__subclasshook__', 'append', 'clear', 'copy', 'count', 'extend', 'index', 'insert', 'pop', 'remove', 'reverse', 'sort'] 
 # Contains the data for one cell. (XFCell is the base class of Cell)
 # WARNING: You don’t call this class yourself. You access Cell objects via methods of the Sheet object(s) that you found in the Book object that was returned when you called open_workbook().
 
@@ -157,7 +173,6 @@ def Average2():
 closure2 = Average2() 
 
 # free영역에서 정의되어있으면 클로저 영역에서 위의 free 영역을 참조해서 할까?
-
 # 위의 질문의 답은 틀렸다. scope의 문제가 생긴다. free영역의 참조를 명시해줘야한다.
 # print(closure2(2)) # UnboundLocalError: local variable 'cnt' referenced before assignment
 
@@ -185,10 +200,12 @@ print(closure2(2)) # 2 / 10 == 0.2 가 잘 출력이 된다.
 
 
 # 데코레이터는 클로저의 확장판이라고 생각해도 된다.
-# 장점 : 중복 제거, 코드간결, 클로저 보다 문법 간결, 조합해서 사용 용이
+# 데코레이터는 함수안의 함수를 감싸는 것이다.
+# 장점 : 코드 중복 제거,코드 간결, 클로저 보다 문법 간결, 반복되는 작업을 데코레이터 함수를 씌우면 해결 가능
 # 단점 : 디버깅 어려움, 에러의 모호함
 
-# 내가 짠 함수의 성능을 시간으로 보고 싶으면?
+# 내가 짠 함수의 성능을 시간으로 보고 싶은 데코레이터를 구현 해 보자.
+# 일반적인 함수들 위에, 위에서 정의한 데코레이터 들을 실행해서 시간(퍼포먼스)을 체크할 수 있다. 
 
 import time
 
@@ -212,9 +229,8 @@ def clock(func):
         return result
     return clocked
 
-# 일반적인 함수들 위에, 위에서 정의한 데코레이터 들을 실행해서 시간(퍼포먼스)을 체크할 수 있다. 
 
-# 간단한 함수를 3개를 테스트 해
+# 간단한 함수를 3개를 테스트 해보겠다.
 
 # 잠깐동안 프로세스를 멈추는 함수
 def time_func(seconds):
