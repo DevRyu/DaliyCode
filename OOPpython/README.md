@@ -9,7 +9,7 @@ Effective Python
 ![Alt Text](https://images-na.ssl-images-amazon.com/images/I/514H6h597qL._SX380_BO1,204,203,200_.jpg)     
 
 
-2019/12/09   
+2019/11/28 2019/12/09   
 
 전 범위 공부를 스키밍과 코딩은 다 하였습니다.   
 2019/12/10 ~  
