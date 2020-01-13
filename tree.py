@@ -55,6 +55,26 @@ class NodeMgmt:
                 self.current_node = self.current_node.right
         # while문이 끝나도 없으면 False
         return False
+    def delete(self, value):
+        # 삭제할 노드 탐색
+        searched = False
+        self.current_node = self.head
+        self.parent = self.head
+        while self.current_node:
+            if self.current_node.value == value:
+                searched = True
+                break
+            elif value < self.current_node.value:
+                self.parent = self.current_node
+                self.current_node = self.current_node.left
+            else:
+                self.parent = self.current_node
+                self.current_node = self.current_node.right
+
+        if searched == False:
+            return False    
+
+
             
 head = Node(1)
 BST = NodeMgmt(head)
