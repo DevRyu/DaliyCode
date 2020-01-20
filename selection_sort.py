@@ -2,6 +2,7 @@
 # 처음수를 기준으로(pivot) 작은 수를 찾은 다음 맨앞으로 보낸다
 # 이미 정렬한 값은 건들지 아니하고 위의 과정을 반복한다
 # pivot이 인덱스 번호로 존재함
+import random
 
 def selection(data):
     # 0부터 길이의 n-1까지
@@ -18,6 +19,5 @@ def selection(data):
     
     return data
 
-import random
 data_list = random.sample(range(100), 10)
 print(selection(data_list))
