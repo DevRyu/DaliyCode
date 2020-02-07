@@ -31,3 +31,5 @@ def solution(data):
         array.append(int(data_slice[0]), data_slice[1])
     list_ = sorted(array, key=lambda x : x[0])
     return list_
+
+solution(['21 Junkyu','21 Dohyun','20 Sunyoung'])
