@@ -19,7 +19,7 @@ function sliceCityFromAddress(address) {
     sumLike += likeArr[i][1];
   }
 
-파이썬과의 차이
-선언과 초기화 둘다해야지 숫자로 인식
-선언만 할시에 자료형을 인식못해서
-Not a null로리턴
+// 파이썬과의 차이
+// 선언과 초기화 둘다해야지 숫자로 인식
+// 선언만 할시에 자료형을 인식못해서
+// Not a null로리턴
