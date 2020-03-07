@@ -90,3 +90,28 @@ print(binary_search3(0, [2, 3, 5, 7, 11]))
 print(binary_search3(5, [2, 3, 5, 7, 11]))
 print(binary_search3(3, [2, 3, 5, 7, 11]))
 print(binary_search3(11, [2, 3, 5, 7, 11]))
+
+
+def binary_search3(element, some_list):
+
+    start_index = 0 
+    end_index   = len(some_list) - 1
+
+    while start_index <= end_index:
+        # print("start",start_index)
+        # print("end",end_index)
+        midpoint = (start_index + end_index) // 2
+
+        # print("mid",midpoint)
+        if some_list[midpoint] == element:
+            return midpoint
+        elif element < some_list[midpoint]:
+            end_index = midpoint - 1
+        else:
+            start_index = midpoint + 1
+
+print(binary_search3(2, [2, 2, 3, 5, 7, 11]))
+print(binary_search3(0, [2, 3, 3, 5, 7, 11]))
+print(binary_search3(5, [2, 3, 5, 7, 11]))
+print(binary_search3(3, [2, 3, 5, 7, 11]))
+print(binary_search3(11, [2, 3, 5, 7, 11]))
