@@ -1,45 +1,88 @@
-**Program Timing**
+**RunTime내부에서 동작하는 과정**
 
-Program 정의 
+**Compile Program**
 
-메모리에 적재되서 실행 될 때 프로그램이라고 함
+cpu : 제어유닛(디코더),연산유닛(제어정보),데이터유닛(메모리계수기),외부버스
 
-(Compile language)Program LifeCycle 
+메모리 : 명령 | 값
 
-**Language Code      : Lint Time          # 코드 작성 ## 코드품질을 위해서 lint 검사**
+**폰노이만 머신 기반 연산**
 
-**Machine Language : Compile Time  # 기계어로 변환 ## 기계어로 번역 & 번역 시 에러 잡음**
+**1)Loading**
 
-File 				              # 파일로 변환 ## load에서 한 꺼번에 적재
+**2)Instruction Fetch & Decode**
 
-					  # 프로그램 시작
+**3)Execute**
 
-Load 					  # 메모리 적재 **## 실행동안 Load &lt;-> Run 반복  **
+자세하게
 
-**Run                         : Run Time 	  # 실행 ## 실행하는 동안의 에러 예)Recursive**
 
-Terminate				  # 프로그램 종료
 
-Runtime에러 안에 context error가 있음(실행 안해보면, 에러를 사전에 잡을 수 없음)(에러 구현 불가능)(제한된 환경에서 가능)
+이미지
 
-그래서 Runtime error를 Lint, Compile Time으로 앞당겨서 잡아야 한다.
+1. Fetch(메모리 명령 -> 제어유닛)
 
-(Script language)Program LifeCycle
+2. Decoding(제어유닛에서 명령어 해석)
 
-**Language Code      : Lint Time          # 코드 작성 ## 코드품질을 위해서 lint 검사**
+3. 명령어 연산유닛으로 가져오고 연산 Execute(제어유닛 -> 연산유닛)
 
-File 				              # 파일로 변환
+4. 값을 데이터유닛 Load(값->데이터유닛)
 
-					  # 프로그램 시작
+5. 데이터유닛의 값을 연산유닛으로 Load(데이터유닛 -> 연산유닛)
 
-Load 					  # 메모리 적재 **## 실행동안 Load &lt;-> Run 반복  **
+6. 연산유닛에서 명령과 값을 Execute
 
-Machine Language			  # 기계어로 변환 (한줄 한줄 씩)
+7. 연산유닛에서 실행한 결과 데이터 유닛으로
 
-**Run                         : Run Time 	  # 실행 ## 실행하는 동안의 에러 예)Recursive**
+8. 결과값을 다시 메모리의 값으로 Store
 
-Terminate				  # 종료
+요약
 
-Load&lt;->Machine Language 간 에러는 Syntex Error고
+위의 그림처럼 메모리에 명령어,값이 적재 된 시점 부터 모든 명령이 해소되어 종료되는 시점까지
 
-나머지 에러는 Runtime Error 
+프로그램의 생명주기
+
+동기적으로 실행 후 메모리에 적재 된 모든 명령어가 실행되면 프로그램은 종료
+
+**Essential Definition Loading**
+
+메모리에 명령어 값이 적재되면 최초의 프로그램 실행시 Essential Definition을 Loading한다.
+
+**Vtable Mapping**
+
+코드내 변수의 가상 메모리주소와 변수의 실제 메모리 주소를 맵핑한다.
+
+왜냐하면 코드는 IDE내에서는 단지 Text이고, Compile단계에서 가상의 메모리 주소로 미리 할당?받아 Compile작업을 해서, 실제 메모리주소에 들어갈 때 가상의 매모리 주소dhk Mapping단계를 거친다
+
+**Run**
+
+프로그램 실행
+
+**Runtime Definition Loading**
+
+프로그램 실행 중에 class,func 정의
+
+ex) c,js의 경우 실행 도중에 runtime내에서 class,func 정의
+
+     단 java의 경우 ClassLoader 로 runtime loading을 한다.
+
+**Run**
+
+Runtime Definition Loading 이후 또 프로그램 실행
+
+**Script Program**
+
+
+이미지
+
+**Run**
+
+컴파일 단계 없이 실행부터 됨
+
+Run time 내에서도 아래 1),2)로 쪼갤 수가 있다
+
+왜냐하면 보는 관점 (전체적, 부분적)에 따라 다를 수 있기 때문에 절대적이지 않다.(상대적) 
+
+1)static time(선언)
+
+2)run time(실행)
